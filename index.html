@@ -33,29 +33,12 @@
       linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
   }
   .content { position: relative; z-index: 1; }
-  header { text-align: center; margin-bottom: 3.5vh; }
-  header .eyebrow {
-    color: var(--coral);
-    letter-spacing: 0.3em;
-    font-size: clamp(13px, 1.3vw, 18px);
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  header h1 {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    color: var(--gold);
-    text-transform: uppercase;
-    font-size: clamp(30px, 4.6vw, 58px);
-    margin: 10px 0 0;
-    letter-spacing: 0.02em;
-  }
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4vh 4vw; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 20px;
-    padding: 20px 24px;
+    padding: 24px 28px;
     backdrop-filter: blur(6px);
   }
   .category h2 {
@@ -63,16 +46,16 @@
     font-weight: 600;
     color: var(--coral);
     text-transform: uppercase;
-    font-size: clamp(18px, 2vw, 24px);
-    margin: 0 0 14px;
+    font-size: clamp(24px, 2.8vw, 34px);
+    margin: 0 0 16px;
     letter-spacing: 0.03em;
   }
   ul { list-style: none; margin: 0; padding: 0; }
   .item {
     display: flex; align-items: baseline; gap: 10px;
-    font-size: clamp(17px, 1.7vw, 24px);
+    font-size: clamp(22px, 2.3vw, 32px);
     font-weight: 500;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   .item:last-child { border-bottom: none; }
@@ -81,16 +64,12 @@
   .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
   .state {
     position: relative; z-index: 1; text-align: center; margin-top: 10vh;
-    color: var(--muted); font-size: clamp(16px, 1.6vw, 22px);
+    color: var(--muted); font-size: clamp(20px, 2vw, 28px);
   }
 </style>
 </head>
 <body>
   <div class="content">
-    <header>
-      <div class="eyebrow">BAPS Chicago &middot; Diwali</div>
-      <h1>Fresh Food Menu</h1>
-    </header>
     <div class="grid" id="grid"></div>
     <div class="state" id="state" hidden>Loading menu&hellip;</div>
   </div>
