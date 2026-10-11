@@ -6,7 +6,7 @@
 <title>Diwali Fresh Food Menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg-a: #1c1030;
@@ -42,14 +42,15 @@
     font-weight: 700;
   }
   header h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 800;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
     color: var(--gold);
+    text-transform: uppercase;
     font-size: clamp(30px, 4.6vw, 58px);
     margin: 10px 0 0;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.02em;
   }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 4vh 4vw; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4vh 4vw; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
@@ -58,12 +59,13 @@
     backdrop-filter: blur(6px);
   }
   .category h2 {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
     color: var(--coral);
+    text-transform: uppercase;
     font-size: clamp(18px, 2vw, 24px);
     margin: 0 0 14px;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.03em;
   }
   ul { list-style: none; margin: 0; padding: 0; }
   .item {
