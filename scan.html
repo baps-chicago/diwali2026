@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan for Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-a: #1c1030;
+    --bg-b: #341b45;
+    --bg-c: #120a22;
+    --gold: #ffc555;
+    --coral: #ff6b5b;
+    --cream: #f5ecff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden;
+    color: var(--cream);
+    font-family: 'Manrope', sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  body {
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(255,107,91,0.16), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 100% 100%, rgba(255,197,85,0.14), transparent 55%),
+      linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+  }
+  .deco { position: absolute; pointer-events: none; opacity: 0.08; z-index: 0; width: min(34vw, 420px); }
+  .deco.diya-br { bottom: -4vh; right: -3vw; }
+  .deco.diya-tl { top: -5vh; left: -4vw; transform: rotate(180deg); }
+  .wrap { position: relative; z-index: 1; text-align: center; padding: 4vh 6vw; }
+  .eyebrow {
+    color: var(--coral); letter-spacing: 0.3em; text-transform: uppercase;
+    font-weight: 700; font-size: clamp(13px, 1.5vw, 20px);
+  }
+  h1 {
+    font-family: 'Unbounded', sans-serif; font-weight: 800; color: var(--gold);
+    font-size: clamp(26px, 3.6vw, 48px); margin: 10px 0 4vh; letter-spacing: -0.01em;
+  }
+  .qr-box {
+    display: inline-block; background: var(--cream); padding: 24px; border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255,197,85,0.25);
+  }
+  .qr-box img { display: block; width: clamp(240px, 32vw, 480px); height: auto; }
+  p.hint { margin-top: 3vh; font-size: clamp(16px, 1.6vw, 22px); color: var(--cream); opacity: 0.8; font-weight: 500; }
+</style>
+</head>
+<body>
+  <svg class="deco diya-br" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <path d="M30 110c0 28 32 42 70 42s70-14 70-42c0-14-14-20-30-20H60c-16 0-30 6-30 20z" stroke="#ffc555" stroke-width="3"/>
+    <ellipse cx="100" cy="90" rx="78" ry="10" stroke="#ffc555" stroke-width="3"/>
+    <path d="M100 78c0-16-10-22-6-36 3 10 14 14 14 30 0 8-4 12-8 6z" fill="#ff6b5b" stroke="#ff6b5b" stroke-width="2"/>
+  </svg>
+  <svg class="deco diya-tl" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <path d="M30 110c0 28 32 42 70 42s70-14 70-42c0-14-14-20-30-20H60c-16 0-30 6-30 20z" stroke="#ffc555" stroke-width="3"/>
+    <ellipse cx="100" cy="90" rx="78" ry="10" stroke="#ffc555" stroke-width="3"/>
+    <path d="M100 78c0-16-10-22-6-36 3 10 14 14 14 30 0 8-4 12-8 6z" fill="#ff6b5b" stroke="#ff6b5b" stroke-width="2"/>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">BAPS Chicago &middot; Diwali</div>
+    <h1>Scan for Today's Menu</h1>
+    <div class="qr-box"><img id="qr" alt="QR code for the fresh food menu"></div>
+    <p class="hint">Point your phone's camera at the code</p>
+  </div>
+<script>
+  // Points at index.html next to this file, on whatever domain this is hosted on.
+  var menuUrl = new URL('index.html', window.location.href).toString();
+  var qrImg = 'https://api.qrserver.com/v1/create-qr-code/?size=480x480&margin=10&color=1a0a12&bgcolor=f5ecff&data=' + encodeURIComponent(menuUrl);
+  document.getElementById('qr').src = qrImg;
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diwali Fresh Food Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-a: #1c1030;
+    --bg-b: #341b45;
+    --bg-c: #120a22;
+    --surface: rgba(255,255,255,0.04);
+    --gold: #ffc555;
+    --coral: #ff6b5b;
+    --cream: #f5ecff;
+    --muted: #b6a8cf;
+    --soldout: #5d5270;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    color: var(--cream);
+    font-family: 'Manrope', sans-serif;
+    overflow: hidden;
+  }
+  body {
+    position: relative;
+    padding: 3vh 4vw;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(255,107,91,0.16), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 100% 100%, rgba(255,197,85,0.14), transparent 55%),
+      linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+  }
+  .deco { position: absolute; pointer-events: none; opacity: 0.1; z-index: 0; }
+  .deco.diya-br { bottom: -4vh; right: -3vw; width: min(42vw, 520px); }
+  .deco.diya-tl { top: -6vh; left: -4vw; width: min(28vw, 340px); transform: rotate(180deg); opacity: 0.07; }
+  .content { position: relative; z-index: 1; }
+  header { text-align: center; margin-bottom: 3.5vh; }
+  header .eyebrow {
+    color: var(--coral);
+    letter-spacing: 0.3em;
+    font-size: clamp(13px, 1.3vw, 18px);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  header h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 800;
+    color: var(--gold);
+    font-size: clamp(30px, 4.6vw, 58px);
+    margin: 10px 0 0;
+    letter-spacing: -0.01em;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 4vh 4vw; }
+  .category {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 20px 24px;
+    backdrop-filter: blur(6px);
+  }
+  .category h2 {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    color: var(--coral);
+    font-size: clamp(18px, 2vw, 24px);
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  .item {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: clamp(17px, 1.7vw, 24px);
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .item:last-child { border-bottom: none; }
+  .item-name { white-space: nowrap; }
+  .dots { flex: 1; border-bottom: 2px dotted rgba(245,236,255,0.2); transform: translateY(-6px); }
+  .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
+  .item.sold-out { color: var(--soldout); }
+  .item.sold-out .item-price { color: var(--soldout); }
+  .tag {
+    font-size: 0.5em; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+    background: rgba(93,82,112,0.5); color: var(--muted);
+    padding: 4px 9px; border-radius: 100px; vertical-align: middle; margin-left: 6px;
+  }
+  .state {
+    position: relative; z-index: 1; text-align: center; margin-top: 10vh;
+    color: var(--muted); font-size: clamp(16px, 1.6vw, 22px);
+  }
+</style>
+</head>
+<body>
+  <svg class="deco diya-br" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <path d="M30 110c0 28 32 42 70 42s70-14 70-42c0-14-14-20-30-20H60c-16 0-30 6-30 20z" stroke="#ffc555" stroke-width="3"/>
+    <ellipse cx="100" cy="90" rx="78" ry="10" stroke="#ffc555" stroke-width="3"/>
+    <path d="M100 78c0-16-10-22-6-36 3 10 14 14 14 30 0 8-4 12-8 6z" fill="#ff6b5b" stroke="#ff6b5b" stroke-width="2"/>
+    <circle cx="40" cy="30" r="3" fill="#ffc555"/>
+    <circle cx="160" cy="45" r="2.5" fill="#ff6b5b"/>
+    <circle cx="170" cy="20" r="2" fill="#ffc555"/>
+  </svg>
+  <svg class="deco diya-tl" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <path d="M30 110c0 28 32 42 70 42s70-14 70-42c0-14-14-20-30-20H60c-16 0-30 6-30 20z" stroke="#ffc555" stroke-width="3"/>
+    <ellipse cx="100" cy="90" rx="78" ry="10" stroke="#ffc555" stroke-width="3"/>
+    <path d="M100 78c0-16-10-22-6-36 3 10 14 14 14 30 0 8-4 12-8 6z" fill="#ff6b5b" stroke="#ff6b5b" stroke-width="2"/>
+  </svg>
+  <div class="content">
+    <header>
+      <div class="eyebrow">BAPS Chicago &middot; Diwali</div>
+      <h1>Fresh Food Menu</h1>
+    </header>
+    <div class="grid" id="grid"></div>
+    <div class="state" id="state" hidden>Loading menu&hellip;</div>
+  </div>
+
+<script>
+  // ---- Point this at your sheet ----
+  var SHEET_ID = '1G4Bwv_KSM-tPCvDV-A2D6amdks73Un0qHPcwxbp7gCw';
+  var GID = 0; // first tab, regardless of its name
+  var CSV_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + GID;
+  var REFRESH_MS = 60000;
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Minimal CSV parser: handles quoted fields and escaped quotes ("").
+  function parseCsv(text) {
+    var rows = [], row = [], field = '', inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i], next = text[i + 1];
+      if (inQuotes) {
+        if (c === '"' && next === '"') { field += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { field += c; }
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && next === '\n') i++;
+          row.push(field); field = '';
+          if (row.length > 1 || row[0] !== '') rows.push(row);
+          row = [];
+        } else field += c;
+      }
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function buildCategories(rows) {
+    var header = rows[0] || [];
+    var idx = {
+      category: header.indexOf('Category'),
+      item: header.indexOf('Item'),
+      price: header.indexOf('Price'),
+      available: header.indexOf('Available'),
+    };
+    var categories = {}, order = [];
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      var item = row[idx.item];
+      if (!item) continue;
+      var category = row[idx.category] || 'Other';
+      var available = String(row[idx.available]).trim().toUpperCase() !== 'N';
+      if (!categories[category]) { categories[category] = []; order.push(category); }
+      categories[category].push({ name: item, price: row[idx.price], available: available });
+    }
+    return { categories: categories, order: order };
+  }
+
+  function render(data) {
+    var grid = document.getElementById('grid');
+    var state = document.getElementById('state');
+    var html = data.order.map(function (cat) {
+      var items = data.categories[cat].map(function (it) {
+        var soldOut = !it.available;
+        return (
+          '<li class="item' + (soldOut ? ' sold-out' : '') + '">' +
+          '<span class="item-name">' + escapeHtml(it.name) +
+          (soldOut ? ' <span class="tag">Sold Out</span>' : '') + '</span>' +
+          '<span class="dots"></span>' +
+          '<span class="item-price">' + (soldOut ? '' : '$' + escapeHtml(it.price)) + '</span>' +
+          '</li>'
+        );
+      }).join('');
+      return (
+        '<section class="category"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
+      );
+    }).join('');
+    grid.innerHTML = html;
+    state.hidden = true;
+    grid.hidden = false;
+  }
+
+  function load() {
+    fetch(CSV_URL, { cache: 'no-store' })
+      .then(function (res) { if (!res.ok) throw new Error('fetch failed'); return res.text(); })
+      .then(function (text) { render(buildCategories(parseCsv(text))); })
+      .catch(function () {
+        // Keep whatever is currently shown; only show the error if we have nothing yet.
+        var grid = document.getElementById('grid');
+        if (!grid.innerHTML) {
+          document.getElementById('state').hidden = false;
+          document.getElementById('state').textContent = 'Menu unavailable — check connection.';
+        }
+      });
+  }
+
+  load();
+  setInterval(load, REFRESH_MS);
+</script>
+</body>
+</html>
