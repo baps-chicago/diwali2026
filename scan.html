@@ -57,7 +57,7 @@
   </div>
 <script>
   // Points at index.html next to this file, on whatever domain this is hosted on.
-  var menuUrl = new URL('index.html', window.location.href).toString();
+  var menuUrl = new URL('menu-mobile.html', window.location.href).toString();
   var qrImg = 'https://api.qrserver.com/v1/create-qr-code/?size=480x480&margin=10&color=1a0a12&bgcolor=f5ecff&data=' + encodeURIComponent(menuUrl);
   document.getElementById('qr').src = qrImg;
 </script>

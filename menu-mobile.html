@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diwali Fresh Food Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-a: #1c1030;
+    --bg-b: #341b45;
+    --bg-c: #120a22;
+    --surface: rgba(255,255,255,0.04);
+    --gold: #ffc555;
+    --coral: #ff6b5b;
+    --cream: #f5ecff;
+    --muted: #b6a8cf;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+  }
+  body {
+    position: relative;
+    padding: 4vh 4vw 6vh;
+    background:
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(255,107,91,0.16), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 100% 100%, rgba(255,197,85,0.14), transparent 55%),
+      linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
+  }
+  .content { position: relative; z-index: 1; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .category {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 14px 14px 10px;
+    backdrop-filter: blur(6px);
+  }
+  .category h2 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    color: var(--coral);
+    text-transform: uppercase;
+    font-size: clamp(14px, 4vw, 17px);
+    margin: 0 0 10px;
+    letter-spacing: 0.02em;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  .item {
+    display: flex; flex-direction: column; gap: 2px;
+    font-size: clamp(13px, 3.4vw, 16px);
+    font-weight: 500;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .item:last-child { border-bottom: none; }
+  .item-name { line-height: 1.25; }
+  .item-price {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 0.9em;
+  }
+  .state {
+    position: relative; z-index: 1; text-align: center; margin-top: 10vh;
+    color: var(--muted); font-size: clamp(16px, 4vw, 20px);
+  }
+</style>
+</head>
+<body>
+  <div class="content">
+    <div class="grid" id="grid"></div>
+    <div class="state" id="state" hidden>Loading menu&hellip;</div>
+  </div>
+
+<script>
+  // ---- Point this at your sheet ----
+  var SHEET_ID = '1G4Bwv_KSM-tPCvDV-A2D6amdks73Un0qHPcwxbp7gCw';
+  var GID = 0; // first tab, regardless of its name
+  var CSV_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + GID;
+  var REFRESH_MS = 60000;
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Minimal CSV parser: handles quoted fields and escaped quotes ("").
+  function parseCsv(text) {
+    var rows = [], row = [], field = '', inQuotes = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i], next = text[i + 1];
+      if (inQuotes) {
+        if (c === '"' && next === '"') { field += '"'; i++; }
+        else if (c === '"') { inQuotes = false; }
+        else { field += c; }
+      } else {
+        if (c === '"') inQuotes = true;
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (c === '\r' && next === '\n') i++;
+          row.push(field); field = '';
+          if (row.length > 1 || row[0] !== '') rows.push(row);
+          row = [];
+        } else field += c;
+      }
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function buildCategories(rows) {
+    var header = rows[0] || [];
+    var idx = {
+      category: header.indexOf('Category'),
+      item: header.indexOf('Item'),
+      price: header.indexOf('Price'),
+      available: header.indexOf('Available'),
+    };
+    var categories = {}, order = [];
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      var item = row[idx.item];
+      if (!item) continue;
+      var available = String(row[idx.available]).trim().toUpperCase() !== 'N';
+      if (!available) continue; // unavailable items are left off the menu entirely
+      var category = row[idx.category] || 'Other';
+      if (!categories[category]) { categories[category] = []; order.push(category); }
+      categories[category].push({ name: item, price: row[idx.price] });
+    }
+    order = order.filter(function (cat) { return categories[cat].length > 0; }); // drop categories with nothing left to show
+    return { categories: categories, order: order };
+  }
+
+  function render(data) {
+    var grid = document.getElementById('grid');
+    var state = document.getElementById('state');
+    var html = data.order.map(function (cat) {
+      var items = data.categories[cat].map(function (it) {
+        return (
+          '<li class="item">' +
+          '<span class="item-name">' + escapeHtml(it.name) + '</span>' +
+          '<span class="item-price">$' + escapeHtml(it.price) + '</span>' +
+          '</li>'
+        );
+      }).join('');
+      return (
+        '<section class="category"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
+      );
+    }).join('');
+    grid.innerHTML = html;
+    state.hidden = true;
+    grid.hidden = false;
+  }
+
+  function load() {
+    fetch(CSV_URL, { cache: 'no-store' })
+      .then(function (res) { if (!res.ok) throw new Error('fetch failed'); return res.text(); })
+      .then(function (text) { render(buildCategories(parseCsv(text))); })
+      .catch(function () {
+        // Keep whatever is currently shown; only show the error if we have nothing yet.
+        var grid = document.getElementById('grid');
+        if (!grid.innerHTML) {
+          document.getElementById('state').hidden = false;
+          document.getElementById('state').textContent = 'Menu unavailable — check connection.';
+        }
+      });
+  }
+
+  load();
+  setInterval(load, REFRESH_MS);
+</script>
+</body>
+</html>
