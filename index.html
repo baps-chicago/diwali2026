@@ -81,13 +81,6 @@
   .item-name { white-space: nowrap; }
   .dots { flex: 1; border-bottom: 2px dotted rgba(245,236,255,0.2); transform: translateY(-6px); }
   .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
-  .item.sold-out { color: var(--soldout); }
-  .item.sold-out .item-price { color: var(--soldout); }
-  .tag {
-    font-size: 0.5em; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
-    background: rgba(93,82,112,0.5); color: var(--muted);
-    padding: 4px 9px; border-radius: 100px; vertical-align: middle; margin-left: 6px;
-  }
   .state {
     position: relative; z-index: 1; text-align: center; margin-top: 10vh;
     color: var(--muted); font-size: clamp(16px, 1.6vw, 22px);
@@ -167,11 +160,13 @@
       var row = rows[r];
       var item = row[idx.item];
       if (!item) continue;
-      var category = row[idx.category] || 'Other';
       var available = String(row[idx.available]).trim().toUpperCase() !== 'N';
+      if (!available) continue; // unavailable items are left off the menu entirely
+      var category = row[idx.category] || 'Other';
       if (!categories[category]) { categories[category] = []; order.push(category); }
-      categories[category].push({ name: item, price: row[idx.price], available: available });
+      categories[category].push({ name: item, price: row[idx.price] });
     }
+    order = order.filter(function (cat) { return categories[cat].length > 0; }); // drop categories with nothing left to show
     return { categories: categories, order: order };
   }
 
@@ -180,13 +175,11 @@
     var state = document.getElementById('state');
     var html = data.order.map(function (cat) {
       var items = data.categories[cat].map(function (it) {
-        var soldOut = !it.available;
         return (
-          '<li class="item' + (soldOut ? ' sold-out' : '') + '">' +
-          '<span class="item-name">' + escapeHtml(it.name) +
-          (soldOut ? ' <span class="tag">Sold Out</span>' : '') + '</span>' +
+          '<li class="item">' +
+          '<span class="item-name">' + escapeHtml(it.name) + '</span>' +
           '<span class="dots"></span>' +
-          '<span class="item-price">' + (soldOut ? '' : '$' + escapeHtml(it.price)) + '</span>' +
+          '<span class="item-price">$' + escapeHtml(it.price) + '</span>' +
           '</li>'
         );
       }).join('');
