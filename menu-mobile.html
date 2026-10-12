@@ -33,6 +33,7 @@
       linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
   }
   .content { position: relative; z-index: 1; }
+  .logo { display: block; margin: 0 auto 3vh; max-width: 180px; width: 46vw; height: auto; }
   .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   .category {
     background: var(--surface);
@@ -72,6 +73,7 @@
 </head>
 <body>
   <div class="content">
+    <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
     <div class="grid" id="grid"></div>
     <div class="state" id="state" hidden>Loading menu&hellip;</div>
   </div>
