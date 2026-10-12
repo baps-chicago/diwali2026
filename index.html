@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-a: #15161d;
-    --bg-b: #1d1f2e;
-    --bg-c: #08080b;
-    --surface: rgba(255,255,255,0.035);
-    --gold: #a5b4fc;
-    --coral: #fb923c;
-    --cream: #e9e9f0;
-    --muted: #8b8d9a;
+    --bg-a: #15295a;
+    --bg-b: #1f3f74;
+    --bg-c: #060f21;
+    --surface: rgba(255,255,255,0.045);
+    --gold: #8ecae6;
+    --coral: #e3b23c;
+    --cream: #f0f2f5;
+    --muted: #9fb3c8;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -28,8 +28,8 @@
     position: relative;
     padding: 3vh 4vw 6vh;
     background:
-      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(99,102,241,0.14), transparent 60%),
-      radial-gradient(ellipse 900px 700px at 100% 100%, rgba(129,140,248,0.10), transparent 55%),
+      radial-gradient(ellipse 900px 600px at 15% -5%, rgba(142,202,230,0.14), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 100% 100%, rgba(227,178,60,0.10), transparent 55%),
       linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
   }
   .content { position: relative; z-index: 1; }
@@ -58,7 +58,7 @@
     padding: 12px 0;
   }
   .item-name { white-space: nowrap; }
-  .dots { flex: 1; border-bottom: 2px dotted rgba(233,233,240,0.18); transform: translateY(-6px); }
+  .dots { flex: 1; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-6px); }
   .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
   .state {
     position: relative; z-index: 1; text-align: center; margin-top: 10vh;
