@@ -20,26 +20,38 @@
   }
   * { box-sizing: border-box; }
   html, body {
-    margin: 0; padding: 0; min-height: 100%;
+    margin: 0; padding: 0; height: 100%;
     color: var(--cream);
     font-family: 'Jost', sans-serif;
+    overflow: hidden; /* the stage is scaled to fit, so the page itself never scrolls */
   }
   body {
     position: relative;
-    padding: 3vh 4vw 6vh;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background:
       radial-gradient(ellipse 900px 600px at 15% -5%, rgba(142,202,230,0.14), transparent 60%),
       radial-gradient(ellipse 900px 700px at 100% 100%, rgba(227,178,60,0.10), transparent 55%),
       linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
   }
-  .content { position: relative; z-index: 1; }
-  .logo { display: block; margin: 0 auto 3vh; height: clamp(70px, 9vh, 120px); width: auto; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4vh 4vw; }
+  /* .content is a fixed-size "design canvas". JS scales it as one unit to fit
+     whatever window/screen it's displayed on, so spacing and text scale together
+     instead of reflowing or scrolling. */
+  .content {
+    position: relative; z-index: 1;
+    width: 1800px;
+    padding: 40px 60px;
+    transform-origin: center center;
+  }
+  .logo { display: block; margin: 0 auto 28px; height: 92px; width: auto; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px 40px; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 20px;
-    padding: 24px 28px;
+    padding: 22px 26px;
     backdrop-filter: blur(6px);
   }
   .category h2 {
@@ -47,28 +59,28 @@
     font-weight: 600;
     color: var(--coral);
     text-transform: uppercase;
-    font-size: clamp(24px, 2.8vw, 34px);
-    margin: 0 0 16px;
+    font-size: 30px;
+    margin: 0 0 14px;
     letter-spacing: 0.03em;
   }
   ul { list-style: none; margin: 0; padding: 0; }
   .item {
     display: flex; align-items: baseline; gap: 10px;
-    font-size: clamp(22px, 2.3vw, 32px);
+    font-size: 26px;
     font-weight: 500;
-    padding: 12px 0;
+    padding: 10px 0;
   }
   .item-name { white-space: nowrap; }
   .dots { flex: 1; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-6px); }
   .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
   .state {
-    position: relative; z-index: 1; text-align: center; margin-top: 10vh;
-    color: var(--muted); font-size: clamp(20px, 2vw, 28px);
+    position: relative; z-index: 1; text-align: center; margin-top: 6vh;
+    color: var(--muted); font-size: 24px;
   }
 </style>
 </head>
 <body>
-  <div class="content">
+  <div class="content" id="content">
     <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
     <div class="grid" id="grid"></div>
     <div class="state" id="state" hidden>Loading menu&hellip;</div>
@@ -209,7 +221,23 @@
     grid.innerHTML = html;
     state.hidden = true;
     grid.hidden = false;
+    fitToScreen();
   }
+
+  // Scales the whole .content block as one unit so it always fills the
+  // window without ever needing to scroll, however many items/categories
+  // are on the menu. Caps how far it scales up so a very short menu doesn't
+  // blow up into giant text.
+  var MAX_SCALE = 1.4;
+  function fitToScreen() {
+    var content = document.getElementById('content');
+    content.style.transform = 'scale(1)';
+    var w = content.offsetWidth, h = content.offsetHeight;
+    if (!w || !h) return;
+    var scale = Math.min(window.innerWidth / w, window.innerHeight / h, MAX_SCALE);
+    content.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fitToScreen);
 
   function load() {
     fetch(CSV_URL, { cache: 'no-store' })
@@ -225,6 +253,7 @@
       });
   }
 
+  fitToScreen();
   load();
   setInterval(load, REFRESH_MS);
 </script>
