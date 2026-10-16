@@ -111,21 +111,76 @@
     return rows;
   }
 
+  // Day -> real calendar date, used by "Auto" mode to pick the active day.
+  // Update these to match the actual event dates once finalized (YYYY-MM-DD,
+  // read in the venue's local time). Until then, Auto falls back to Day 1.
+  var DAY_DATES = {
+    1: '2026-11-07',
+    2: '2026-11-08',
+    3: '2026-11-09',
+    4: '2026-11-10'
+  };
+
+  // Finds the column index for each "Day N" header (matches a prefix, so
+  // "Day 1 (Sat 11/7)" still matches "Day 1").
+  function findDayColumns(header) {
+    var days = [];
+    for (var n = 1; n <= 4; n++) {
+      var prefix = 'Day ' + n;
+      var found = -1;
+      for (var c = 0; c < header.length; c++) {
+        if (String(header[c]).trim().indexOf(prefix) === 0) { found = c; break; }
+      }
+      days.push(found);
+    }
+    return days;
+  }
+
+  function isChecked(val) {
+    var v = String(val || '').trim().toUpperCase();
+    return v === 'TRUE' || v === 'Y' || v === 'YES';
+  }
+
+  function todayStr() {
+    return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+  }
+
+  // Override cell can be "Auto", "Day 1".."Day 4", or blank (treated as Auto).
+  function resolveActiveDay(overrideVal) {
+    var m = String(overrideVal || '').trim().match(/^Day\s*([1-4])$/i);
+    if (m) return parseInt(m[1], 10);
+    var today = todayStr();
+    for (var n = 1; n <= 4; n++) {
+      if (DAY_DATES[n] === today) return n;
+    }
+    return 1; // Auto with no date match yet (or dates not configured) -> Day 1
+  }
+
   function buildCategories(rows) {
     var header = rows[0] || [];
     var idx = {
       category: header.indexOf('Category'),
       item: header.indexOf('Item'),
       price: header.indexOf('Price'),
-      available: header.indexOf('Available'),
+      override: header.indexOf('Override'),
     };
+    var dayIdx = findDayColumns(header);
+
+    var overrideVal = '';
+    if (idx.override !== -1) {
+      for (var r = 1; r < rows.length; r++) {
+        var v = rows[r][idx.override];
+        if (v && String(v).trim()) { overrideVal = v; break; }
+      }
+    }
+    var activeCol = dayIdx[resolveActiveDay(overrideVal) - 1];
+
     var categories = {}, order = [];
     for (var r = 1; r < rows.length; r++) {
       var row = rows[r];
       var item = row[idx.item];
       if (!item) continue;
-      var available = String(row[idx.available]).trim().toUpperCase() !== 'N';
-      if (!available) continue; // unavailable items are left off the menu entirely
+      if (activeCol === -1 || !isChecked(row[activeCol])) continue; // not on today's menu
       var category = row[idx.category] || 'Other';
       if (!categories[category]) { categories[category] = []; order.push(category); }
       categories[category].push({ name: item, price: row[idx.price] });
