@@ -36,22 +36,25 @@
       radial-gradient(ellipse 900px 700px at 100% 100%, rgba(227,178,60,0.10), transparent 55%),
       linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-c) 100%);
   }
-  /* .content is a fixed-size "design canvas". JS scales it as one unit to fit
-     whatever window/screen it's displayed on, so spacing and text scale together
-     instead of reflowing or scrolling. */
+  /* .content always fills ~94% of the viewport width (grid columns are fr-based,
+     so they stretch to use all of it, however many items are on the menu).
+     JS scales the root font-size up or down so text/padding/gaps (all in rem)
+     grow or shrink to fill the available height without ever scrolling -
+     width-fill and height-fit are handled independently, so there's no
+     letterboxing on the sides. */
   .content {
     position: relative; z-index: 1;
-    width: 1800px;
-    padding: 40px 60px;
-    transform-origin: center center;
+    width: 94vw;
+    padding: 2.25rem 0;
+    box-sizing: border-box;
   }
-  .logo { display: block; margin: 0 auto 28px; height: 92px; width: auto; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px 40px; }
+  .logo { display: block; margin: 0 auto 1.75rem; height: 5.75rem; width: auto; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 3vw; row-gap: 2.25rem; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px;
-    padding: 22px 26px;
+    border-radius: 1.25rem;
+    padding: 1.375rem 1.625rem;
     backdrop-filter: blur(6px);
   }
   .category h2 {
@@ -59,23 +62,23 @@
     font-weight: 600;
     color: var(--coral);
     text-transform: uppercase;
-    font-size: 30px;
-    margin: 0 0 14px;
+    font-size: 1.875rem;
+    margin: 0 0 0.875rem;
     letter-spacing: 0.03em;
   }
   ul { list-style: none; margin: 0; padding: 0; }
   .item {
-    display: flex; align-items: baseline; gap: 10px;
-    font-size: 26px;
+    display: flex; align-items: baseline; gap: 0.625rem;
+    font-size: 1.625rem;
     font-weight: 500;
-    padding: 10px 0;
+    padding: 0.625rem 0;
   }
   .item-name { white-space: nowrap; }
-  .dots { flex: 1; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-6px); }
+  .dots { flex: 1; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-0.375rem); }
   .item-price { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--gold); }
   .state {
     position: relative; z-index: 1; text-align: center; margin-top: 6vh;
-    color: var(--muted); font-size: 24px;
+    color: var(--muted); font-size: 1.5rem;
   }
 </style>
 </head>
@@ -224,18 +227,23 @@
     fitToScreen();
   }
 
-  // Scales the whole .content block as one unit so it always fills the
-  // window without ever needing to scroll, however many items/categories
-  // are on the menu. Caps how far it scales up so a very short menu doesn't
-  // blow up into giant text.
-  var MAX_SCALE = 1.4;
+  // The grid always fills the viewport width (its columns are fr-based), so
+  // the only thing that needs fitting is height: this scales the root
+  // font-size so every rem-based text/padding/gap grows or shrinks together
+  // to fill the available height without ever needing to scroll, however
+  // many items/categories are on the menu. Capped both ways so a very short
+  // or very long menu doesn't end up with illegibly huge or tiny text.
+  var BASE_FONT_PX = 16;
+  var MIN_SCALE = 0.55, MAX_SCALE = 1.5;
   function fitToScreen() {
+    var html = document.documentElement;
     var content = document.getElementById('content');
-    content.style.transform = 'scale(1)';
-    var w = content.offsetWidth, h = content.offsetHeight;
-    if (!w || !h) return;
-    var scale = Math.min(window.innerWidth / w, window.innerHeight / h, MAX_SCALE);
-    content.style.transform = 'scale(' + scale + ')';
+    html.style.fontSize = BASE_FONT_PX + 'px'; // reset to the baseline before measuring
+    var naturalHeight = content.scrollHeight;
+    if (!naturalHeight) return;
+    var scale = window.innerHeight / naturalHeight;
+    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+    html.style.fontSize = (BASE_FONT_PX * scale) + 'px';
   }
   window.addEventListener('resize', fitToScreen);
 
