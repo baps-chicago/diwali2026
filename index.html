@@ -49,7 +49,15 @@
     box-sizing: border-box;
   }
   .logo { display: block; margin: 0 auto 1.75rem; height: 5.75rem; width: auto; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 3vw; row-gap: 2.25rem; }
+  /* Left column: one category spanning the full height. Right column: the
+     remaining categories stacked and sharing that same height equally. */
+  .grid { display: flex; column-gap: 3vw; align-items: stretch; }
+  .col { flex: 1; min-width: 0; }
+  .col-left { display: flex; }
+  .col-left .category { flex: 1; display: flex; flex-direction: column; }
+  .col-left .category ul { flex: 1; }
+  .col-right { display: flex; flex-direction: column; row-gap: 2.25rem; }
+  .col-right .category { flex: 1; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
@@ -204,23 +212,38 @@
     return { categories: categories, order: order };
   }
 
+  function categorySection(cat, data) {
+    var items = data.categories[cat].map(function (it) {
+      return (
+        '<li class="item">' +
+        '<span class="item-name">' + escapeHtml(it.name) + '</span>' +
+        '<span class="dots"></span>' +
+        '<span class="item-price">$' + escapeHtml(it.price) + '</span>' +
+        '</li>'
+      );
+    }).join('');
+    return (
+      '<section class="category"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
+    );
+  }
+
+  // Layout: the first category fills the whole left column (spanning both
+  // rows); every other category stacks in the right column, sharing that
+  // same height evenly.
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
-    var html = data.order.map(function (cat) {
-      var items = data.categories[cat].map(function (it) {
-        return (
-          '<li class="item">' +
-          '<span class="item-name">' + escapeHtml(it.name) + '</span>' +
-          '<span class="dots"></span>' +
-          '<span class="item-price">$' + escapeHtml(it.price) + '</span>' +
-          '</li>'
-        );
-      }).join('');
-      return (
-        '<section class="category"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
-      );
-    }).join('');
+    var leftCat = data.order[0];
+    var rightCats = data.order.slice(1);
+    var html = '';
+    if (leftCat) {
+      html += '<div class="col col-left">' + categorySection(leftCat, data) + '</div>';
+    }
+    if (rightCats.length) {
+      html += '<div class="col col-right">' + rightCats.map(function (cat) {
+        return categorySection(cat, data);
+      }).join('') + '</div>';
+    }
     grid.innerHTML = html;
     state.hidden = true;
     grid.hidden = false;
