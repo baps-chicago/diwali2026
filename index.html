@@ -6,7 +6,7 @@
 <title>Diwali Fresh Food Menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg-a: #0c183a;
@@ -47,8 +47,30 @@
     width: 94vw;
     padding: 2.25rem 0;
     box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    column-gap: 3vw;
   }
-  .logo { display: block; margin: 0 auto 1.75rem; height: 5.75rem; width: auto; }
+  /* Sidebar: logo + decorative title, pinned to roughly the left quarter
+     of the screen. */
+  .sidebar {
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .logo { display: block; margin: 0 auto 1.5rem; height: 7rem; width: auto; }
+  .title-script {
+    font-family: 'Great Vibes', cursive;
+    color: var(--coral);
+    font-size: 4rem;
+    line-height: 1.15;
+  }
+  .title-script span { display: block; }
+  .title-script span:last-child { color: var(--gold); }
+  .menu { flex: 1; min-width: 0; }
   /* Left column: one category spanning the full height. Right column: the
      remaining categories stacked and sharing that same height equally. */
   .grid { display: flex; column-gap: 3vw; align-items: stretch; }
@@ -92,9 +114,14 @@
 </head>
 <body>
   <div class="content" id="content">
-    <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
-    <div class="grid" id="grid"></div>
-    <div class="state" id="state" hidden>Loading menu&hellip;</div>
+    <div class="sidebar">
+      <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
+      <div class="title-script"><span>Diwali</span><span>Menu</span></div>
+    </div>
+    <div class="menu">
+      <div class="grid" id="grid"></div>
+      <div class="state" id="state" hidden>Loading menu&hellip;</div>
+    </div>
   </div>
 
 <script>
