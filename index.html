@@ -51,30 +51,31 @@
     align-items: stretch;
     column-gap: 3vw;
   }
-  /* Sidebar: logo + decorative title, pinned to roughly the left quarter
+  /* Sidebar: logo + decorative title, pinned to roughly the left fifth
      of the screen. */
   .sidebar {
-    flex: 0 0 25%;
+    flex: 0 0 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
   }
-  .logo { display: block; margin: 0 auto 1.5rem; height: 7rem; width: auto; }
+  .logo { display: block; margin: 0 auto 1.2rem; height: 5.6rem; width: auto; }
   .title-script { color: var(--coral); }
   .title-script span { display: block; }
   .title-script .word-diwali {
     font-family: 'Alex Brush', cursive;
-    font-size: 9rem;
-    line-height: 0.95;
+    font-size: 7.2rem;
+    line-height: 0.75; /* tight so "Menu" sits right under its baseline, as one lockup */
   }
   .title-script .word-menu {
     font-family: 'Lato', sans-serif;
     font-weight: 700;
-    font-size: 3rem;
-    letter-spacing: 0.08em;
+    font-size: 1.7rem;
+    letter-spacing: 0.3em; /* wide tracking reads as a caption under the script, not a second headline */
     text-transform: uppercase;
+    margin-top: -0.4rem;
   }
   .menu { flex: 1; min-width: 0; }
   /* Left column: one category spanning the full height. Right column: the
