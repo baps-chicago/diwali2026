@@ -6,7 +6,7 @@
 <title>Diwali Fresh Food Menu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&family=Qwitcher+Grypen:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Jost:wght@400;500;600;700&family=Alex+Brush&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg-a: #0c183a;
@@ -62,14 +62,20 @@
     text-align: center;
   }
   .logo { display: block; margin: 0 auto 1.5rem; height: 7rem; width: auto; }
-  .title-script {
-    font-family: 'Qwitcher Grypen', cursive;
-    font-weight: 700;
-    color: var(--coral);
+  .title-script { color: var(--coral); }
+  .title-script span { display: block; }
+  .title-script .word-diwali {
+    font-family: 'Alex Brush', cursive;
     font-size: 9rem;
     line-height: 0.95;
   }
-  .title-script span { display: block; }
+  .title-script .word-menu {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
   .menu { flex: 1; min-width: 0; }
   /* Left column: one category spanning the full height. Right column: the
      remaining categories stacked and sharing that same height equally. */
@@ -116,7 +122,7 @@
   <div class="content" id="content">
     <div class="sidebar">
       <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
-      <div class="title-script"><span>Diwali</span><span>Menu</span></div>
+      <div class="title-script"><span class="word-diwali">Diwali</span><span class="word-menu">Menu</span></div>
     </div>
     <div class="menu">
       <div class="grid" id="grid"></div>
