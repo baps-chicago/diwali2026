@@ -94,6 +94,9 @@
     padding: 1.375rem 1.625rem;
     backdrop-filter: blur(6px);
   }
+  /* Today's Special sits at the top of the right column with a gold outline
+     so it stands out from the regular category boxes below it. */
+  .category.special { border: 1px solid var(--gold); }
   .category h2 {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -213,6 +216,11 @@
     return 1; // Auto with no date match yet (or dates not configured) -> Day 1
   }
 
+  // A category literally named "Today's Special" (any case) in the sheet is
+  // pulled out and always shown first in the right column with its own
+  // gold-outlined box, instead of taking a turn in the normal stack.
+  var SPECIAL_CATEGORY_NAME = "today's special";
+
   function buildCategories(rows) {
     var header = rows[0] || [];
     var idx = {
@@ -243,7 +251,14 @@
       categories[category].push({ name: item, price: row[idx.price] });
     }
     order = order.filter(function (cat) { return categories[cat].length > 0; }); // drop categories with nothing left to show
-    return { categories: categories, order: order };
+
+    var specials = [], rest = [];
+    order.forEach(function (cat) {
+      if (String(cat).trim().toLowerCase() === SPECIAL_CATEGORY_NAME) specials = categories[cat];
+      else rest.push(cat);
+    });
+
+    return { categories: categories, order: rest, specials: specials };
   }
 
   function categorySection(cat, data) {
@@ -261,9 +276,25 @@
     );
   }
 
+  function specialSection(specials) {
+    var items = specials.map(function (it) {
+      return (
+        '<li class="item">' +
+        '<span class="item-name">' + escapeHtml(it.name) + '</span>' +
+        '<span class="dots"></span>' +
+        '<span class="item-price">$' + escapeHtml(it.price) + '</span>' +
+        '</li>'
+      );
+    }).join('');
+    return (
+      '<section class="category special"><h2>Today\'s Special</h2><ul>' + items + '</ul></section>'
+    );
+  }
+
   // Layout: the first category fills the whole left column (spanning both
-  // rows); every other category stacks in the right column, sharing that
-  // same height evenly.
+  // rows). The right column stacks, top to bottom: a "Today's Special" box
+  // (only when at least one item is marked Special for the active day),
+  // then every other category, sharing the remaining height evenly.
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
@@ -273,10 +304,15 @@
     if (leftCat) {
       html += '<div class="col col-left">' + categorySection(leftCat, data) + '</div>';
     }
-    if (rightCats.length) {
-      html += '<div class="col col-right">' + rightCats.map(function (cat) {
+    if (rightCats.length || data.specials.length) {
+      html += '<div class="col col-right">';
+      if (data.specials.length) {
+        html += specialSection(data.specials);
+      }
+      html += rightCats.map(function (cat) {
         return categorySection(cat, data);
-      }).join('') + '</div>';
+      }).join('');
+      html += '</div>';
     }
     grid.innerHTML = html;
     state.hidden = true;
