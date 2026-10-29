@@ -60,9 +60,13 @@
     font-weight: 500;
     padding: 9px 0;
   }
-  .item-name { white-space: nowrap; }
-  .dots { flex: 1; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-4px); }
+  /* Let a long item name wrap instead of forcing it onto one line and
+     overflowing the box, which would push the price past its usual right
+     margin. See index.html for the full explanation. */
+  .item-name { min-width: 0; }
+  .dots { flex: 1; min-width: 8px; border-bottom: 2px dotted rgba(240,242,245,0.18); transform: translateY(-4px); }
   .item-price {
+    flex-shrink: 0;
     font-variant-numeric: tabular-nums;
     font-weight: 700;
     color: var(--gold);
