@@ -78,15 +78,12 @@
     margin-top: -0.4rem;
   }
   .menu { flex: 1; min-width: 0; }
-  /* Left column: one category spanning the full height. Right column: the
-     remaining categories stacked and sharing that same height equally. */
+  /* Left column: the first category on top, Today's Special pinned to the
+     bottom, sharing the height evenly. Right column: every other category
+     stacked the same way. */
   .grid { display: flex; column-gap: 3vw; align-items: stretch; }
-  .col { flex: 1; min-width: 0; }
-  .col-left { display: flex; }
-  .col-left .category { flex: 1; display: flex; flex-direction: column; }
-  .col-left .category ul { flex: 1; }
-  .col-right { display: flex; flex-direction: column; row-gap: 2.25rem; }
-  .col-right .category { flex: 1; }
+  .col { flex: 1; min-width: 0; display: flex; flex-direction: column; row-gap: 2.25rem; }
+  .col .category { flex: 1; }
   .category {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.06);
@@ -291,28 +288,25 @@
     );
   }
 
-  // Layout: the first category fills the whole left column (spanning both
-  // rows). The right column stacks, top to bottom: a "Today's Special" box
-  // (only when at least one item is marked Special for the active day),
-  // then every other category, sharing the remaining height evenly.
+  // Layout: left column stacks the first category on top and Today's
+  // Special at the bottom. Right column stacks every other category.
+  // Each column shares its height evenly between whatever it holds.
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
     var leftCat = data.order[0];
     var rightCats = data.order.slice(1);
     var html = '';
-    if (leftCat) {
-      html += '<div class="col col-left">' + categorySection(leftCat, data) + '</div>';
-    }
-    if (rightCats.length || data.specials.length) {
-      html += '<div class="col col-right">';
-      if (data.specials.length) {
-        html += specialSection(data.specials);
-      }
-      html += rightCats.map(function (cat) {
-        return categorySection(cat, data);
-      }).join('');
+    if (leftCat || data.specials.length) {
+      html += '<div class="col col-left">';
+      if (leftCat) html += categorySection(leftCat, data);
+      if (data.specials.length) html += specialSection(data.specials);
       html += '</div>';
+    }
+    if (rightCats.length) {
+      html += '<div class="col col-right">' + rightCats.map(function (cat) {
+        return categorySection(cat, data);
+      }).join('') + '</div>';
     }
     grid.innerHTML = html;
     state.hidden = true;
