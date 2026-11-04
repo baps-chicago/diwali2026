@@ -109,6 +109,13 @@
   /* Today's Special sits at the top of the right column with a gold outline
      so it stands out from the regular category boxes below it. */
   .category.special { border: 1px solid var(--gold); }
+  /* The fit-to-screen pass always scales to fill the height exactly, so the
+     only safe way to make the text itself bigger - without risking content
+     overflowing past the bottom edge - is to free up some of the room spent
+     on non-text chrome (gaps/padding). Applied only on days whose menu has
+     room to spare; toggled onto #content in render(). */
+  .content.tight-chrome .col { row-gap: 1.4rem; }
+  .content.tight-chrome .category { padding: 0.9rem 1.1rem; }
   .category h2 {
     font-family: 'Oswald', sans-serif;
     font-weight: 600;
@@ -321,11 +328,18 @@
   // Layout: left column stacks the first category on top and Today's
   // Special at the bottom. Right column stacks every other category.
   // Each column shares its height evenly between whatever it holds.
+  // Days whose menu tends to have room to spare, where tightening up the
+  // non-text spacing (see .tight-chrome above) lets the fit-to-screen pass
+  // land on noticeably larger text, without changing Monday's layout.
+  var TIGHT_CHROME_DAYS = ['Saturday', 'Sunday', 'Tuesday'];
+
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
+    var content = document.getElementById('content');
     var dayPill = document.getElementById('dayPill');
     if (dayPill) dayPill.textContent = data.dayName || '';
+    if (content) content.classList.toggle('tight-chrome', TIGHT_CHROME_DAYS.indexOf(data.dayName) !== -1);
     var leftCat = data.order[0];
     var rightCats = data.order.slice(1);
     var html = '';
