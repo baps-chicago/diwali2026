@@ -324,18 +324,19 @@
   // the only thing that needs fitting is height: this scales the root
   // font-size so every rem-based text/padding/gap grows or shrinks together
   // to fill the available height without ever needing to scroll, however
-  // many items/categories are on the menu. Capped both ways so a very short
-  // or very long menu doesn't end up with illegibly huge or tiny text.
+  // many items/categories are on the menu. This is fixed signage hardware
+  // (not a resizable window someone might shrink to almost nothing), so
+  // there's no upper cap - it always scales up to fill the full screen.
+  // MIN_SCALE is just a floor so a very full menu never goes unreadably small.
   var BASE_FONT_PX = 16;
-  var MIN_SCALE = 0.55, MAX_SCALE = 2.6;
+  var MIN_SCALE = 0.55;
   function fitToScreen() {
     var html = document.documentElement;
     var content = document.getElementById('content');
     html.style.fontSize = BASE_FONT_PX + 'px'; // reset to the baseline before measuring
     var naturalHeight = content.scrollHeight;
     if (!naturalHeight) return;
-    var scale = window.innerHeight / naturalHeight;
-    scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
+    var scale = Math.max(MIN_SCALE, window.innerHeight / naturalHeight);
     html.style.fontSize = (BASE_FONT_PX * scale) + 'px';
   }
   window.addEventListener('resize', fitToScreen);
