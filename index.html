@@ -77,6 +77,21 @@
     text-transform: uppercase;
     margin-top: -0.4rem;
   }
+  /* Shows which day's menu is currently active, so anyone walking up can
+     tell at a glance without reading every item. */
+  .day-pill {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .day-pill:empty { display: none; }
   .menu { flex: 1; min-width: 0; }
   /* Left column: the first category on top, Today's Special pinned to the
      bottom, sharing the height evenly. Right column: every other category
@@ -130,6 +145,7 @@
     <div class="sidebar">
       <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
       <div class="title-script"><span class="word-diwali">Diwali</span><span class="word-menu">Menu</span></div>
+      <div class="day-pill" id="dayPill"></div>
     </div>
     <div class="menu">
       <div class="grid" id="grid"></div>
@@ -247,7 +263,9 @@
         if (v && String(v).trim()) { overrideVal = v; break; }
       }
     }
-    var activeCol = dayIdx[resolveActiveDay(overrideVal) - 1];
+    var activeDay = resolveActiveDay(overrideVal);
+    var activeCol = dayIdx[activeDay - 1];
+    var activeDayName = DAY_NAMES[activeDay - 1];
 
     var categories = {}, order = [];
     for (var r = 1; r < rows.length; r++) {
@@ -267,7 +285,7 @@
       else rest.push(cat);
     });
 
-    return { categories: categories, order: rest, specials: specials };
+    return { categories: categories, order: rest, specials: specials, dayName: activeDayName };
   }
 
   function categorySection(cat, data) {
@@ -306,6 +324,8 @@
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
+    var dayPill = document.getElementById('dayPill');
+    if (dayPill) dayPill.textContent = data.dayName || '';
     var leftCat = data.order[0];
     var rightCats = data.order.slice(1);
     var html = '';

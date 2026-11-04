@@ -34,6 +34,20 @@
   }
   .content { position: relative; z-index: 1; }
   .logo { display: block; margin: 0 auto 1.5vh; max-width: 90px; width: 24vw; height: auto; }
+  /* Shows which day's menu is currently active. */
+  .day-pill {
+    display: table; margin: 0 auto 2.5vh;
+    padding: 6px 18px;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 700;
+    font-size: clamp(12px, 3.4vw, 15px);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .day-pill:empty { display: none; }
   .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
   .category {
     background: var(--surface);
@@ -80,6 +94,7 @@
 <body>
   <div class="content">
     <img class="logo" src="assets/logo.png" alt="An Ocean of Virtues">
+    <div class="day-pill" id="dayPill"></div>
     <div class="grid" id="grid"></div>
     <div class="state" id="state" hidden>Loading menu&hellip;</div>
   </div>
@@ -194,7 +209,9 @@
         if (v && String(v).trim()) { overrideVal = v; break; }
       }
     }
-    var activeCol = dayIdx[resolveActiveDay(overrideVal) - 1];
+    var activeDay = resolveActiveDay(overrideVal);
+    var activeCol = dayIdx[activeDay - 1];
+    var activeDayName = DAY_NAMES[activeDay - 1];
 
     var categories = {}, order = [];
     for (var r = 1; r < rows.length; r++) {
@@ -214,7 +231,7 @@
       else rest.push(cat);
     });
 
-    return { categories: categories, order: rest, specials: specials };
+    return { categories: categories, order: rest, specials: specials, dayName: activeDayName };
   }
 
   function categorySection(cat, data, extraClass) {
@@ -251,6 +268,8 @@
   function render(data) {
     var grid = document.getElementById('grid');
     var state = document.getElementById('state');
+    var dayPill = document.getElementById('dayPill');
+    if (dayPill) dayPill.textContent = data.dayName || '';
     var html = '';
     if (data.specials.length) {
       html += specialSection(data.specials);
