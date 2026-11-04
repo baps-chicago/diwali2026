@@ -176,7 +176,7 @@
 
   // Day -> real calendar date, used by "Auto" mode to pick the active day.
   // Update these to match the actual event dates once finalized (YYYY-MM-DD,
-  // read in the venue's local time). Until then, Auto falls back to Day 1.
+  // read in the venue's local time). Until then, Auto falls back to day 1.
   var DAY_DATES = {
     1: '2026-11-07',
     2: '2026-11-08',
@@ -184,15 +184,19 @@
     4: '2026-11-10'
   };
 
-  // Finds the column index for each "Day N" header (matches a prefix, so
-  // "Day 1 (Sat 11/7)" still matches "Day 1").
+  // The sheet's day columns are named after the actual weekday (matching
+  // DAY_DATES above) instead of "Day 1".."Day 4".
+  var DAY_NAMES = ['Saturday', 'Sunday', 'Monday', 'Tuesday'];
+
+  // Finds the column index for each day name header (matches a prefix, so
+  // "Saturday (11/7)" still matches "Saturday").
   function findDayColumns(header) {
     var days = [];
     for (var n = 1; n <= 4; n++) {
-      var prefix = 'Day ' + n;
+      var prefix = DAY_NAMES[n - 1];
       var found = -1;
       for (var c = 0; c < header.length; c++) {
-        if (String(header[c]).trim().indexOf(prefix) === 0) { found = c; break; }
+        if (String(header[c]).trim().toLowerCase().indexOf(prefix.toLowerCase()) === 0) { found = c; break; }
       }
       days.push(found);
     }
@@ -208,10 +212,12 @@
     return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
   }
 
-  // Override cell can be "Auto", "Day 1".."Day 4", or blank (treated as Auto).
+  // Override cell can be "Auto", one of the day names, or blank (treated as Auto).
   function resolveActiveDay(overrideVal) {
-    var m = String(overrideVal || '').trim().match(/^Day\s*([1-4])$/i);
-    if (m) return parseInt(m[1], 10);
+    var v = String(overrideVal || '').trim().toLowerCase();
+    for (var n = 1; n <= 4; n++) {
+      if (v === DAY_NAMES[n - 1].toLowerCase()) return n;
+    }
     var today = todayStr();
     for (var n = 1; n <= 4; n++) {
       if (DAY_DATES[n] === today) return n;
