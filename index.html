@@ -296,7 +296,14 @@
     return { categories: categories, order: rest, specials: specials, dayName: activeDayName };
   }
 
+  // A column's boxes used to split its height evenly (flex: 1 each)
+  // regardless of how many items were in each one - a 1-item category
+  // ended up stretched to match a 6-item one next to it, leaving a big
+  // empty gap inside the short box. Giving each box a flex-grow equal to
+  // its own item count instead makes a box's share of the column roughly
+  // proportional to how much it actually holds.
   function categorySection(cat, data) {
+    var count = data.categories[cat].length;
     var items = data.categories[cat].map(function (it) {
       return (
         '<li class="item">' +
@@ -307,11 +314,12 @@
       );
     }).join('');
     return (
-      '<section class="category"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
+      '<section class="category" style="flex: ' + count + ' 1 0;"><h2>' + escapeHtml(cat) + '</h2><ul>' + items + '</ul></section>'
     );
   }
 
   function specialSection(specials) {
+    var count = specials.length;
     var items = specials.map(function (it) {
       return (
         '<li class="item">' +
@@ -322,7 +330,7 @@
       );
     }).join('');
     return (
-      '<section class="category special"><h2>Today\'s Special</h2><ul>' + items + '</ul></section>'
+      '<section class="category special" style="flex: ' + count + ' 1 0;"><h2>Today\'s Special</h2><ul>' + items + '</ul></section>'
     );
   }
 
