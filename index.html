@@ -379,13 +379,22 @@
   // MIN_SCALE is just a floor so a very full menu never goes unreadably small.
   var BASE_FONT_PX = 16;
   var MIN_SCALE = 0.55;
+  // A tiny safety cushion so the target is never *exactly* 100% of the
+  // screen height. Different browsers/devices can measure the same text a
+  // few pixels differently (font rendering, hinting, etc.), and with zero
+  // margin, a day whose content happens to land right at the limit on one
+  // device can overflow by a hair on another - which, since .content is
+  // centered with overflow hidden, clips the same few pixels off BOTH the
+  // top and bottom edges (eating the outer padding first). Reserving a
+  // small buffer absorbs that variance before it turns into clipping.
+  var FIT_SAFETY_PX = 10;
   function fitToScreen() {
     var html = document.documentElement;
     var content = document.getElementById('content');
     html.style.fontSize = BASE_FONT_PX + 'px'; // reset to the baseline before measuring
     var naturalHeight = content.scrollHeight;
     if (!naturalHeight) return;
-    var scale = Math.max(MIN_SCALE, window.innerHeight / naturalHeight);
+    var scale = Math.max(MIN_SCALE, (window.innerHeight - FIT_SAFETY_PX) / naturalHeight);
     html.style.fontSize = (BASE_FONT_PX * scale) + 'px';
   }
   window.addEventListener('resize', fitToScreen);
