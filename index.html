@@ -407,6 +407,22 @@
   fitToScreen();
   load();
   setInterval(load, REFRESH_MS);
+
+  // The very first fitToScreen() call can run before the custom webfonts
+  // (Poppins, Nunito Sans, etc.) have actually finished downloading, so it
+  // measures text set in the browser's fallback font instead - a different
+  // size/shape. Once the real font loads, the text reflows to different
+  // proportions, but nothing re-fits for that on its own, so the page is
+  // left scaled for a font it isn't actually using anymore. On a fast
+  // connection the fonts usually load almost immediately, so this barely
+  // shows; on a slower one it can get stuck that way indefinitely. Re-run
+  // the fit once the fonts are confirmed ready (and again on window load,
+  // as a fallback for browsers without the Font Loading API) to guarantee
+  // it eventually measures against the real fonts.
+  if (window.document && document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitToScreen);
+  }
+  window.addEventListener('load', fitToScreen);
 </script>
 </body>
 </html>
